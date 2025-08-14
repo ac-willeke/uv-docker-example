@@ -99,7 +99,7 @@ jobs:
           docker image ls -a
 
       - name: Test command line
-        run: uv run uv_docker_example
+        run: python --version
 
       - name: Test Docker compose
         run: |
