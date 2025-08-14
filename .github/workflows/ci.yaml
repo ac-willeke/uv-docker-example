@@ -99,7 +99,7 @@ jobs:
           docker image ls -a
 
       - name: Test command line
-        run: ./run.sh hello
+        run: uv run uv_docker_example
 
       - name: Test Docker compose
         run: |
@@ -107,7 +107,7 @@ jobs:
           docker compose down
 
       - name: Test command line (multistage)
-        run: docker run uv-docker-example-multistage:latest hello
+        run: docker run uv-docker-example-multistage:latest uv run uv_docker_example
 
       - name: Test command line (standalone)
-        run: docker run uv-docker-example-standalone:latest hello
+        run: docker run uv-docker-example-standalone:latest uv run uv_docker_example
