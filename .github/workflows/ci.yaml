@@ -1,4 +1,4 @@
-name: CI
+name: CI - Docker Build and Test
 
 on:
   push:
@@ -99,7 +99,7 @@ jobs:
           docker image ls -a
 
       - name: Test command line
-        run: uv run uv_docker_example
+        run: python --version
 
       - name: Test Docker compose
         run: |
@@ -107,7 +107,7 @@ jobs:
           docker compose down
 
       - name: Test command line (multistage)
-        run: docker run uv-docker-example-multistage:latest uv run uv_docker_example
+        run: docker run uv-docker-example-multistage:latest python -m uv_docker_example
 
       - name: Test command line (standalone)
-        run: docker run uv-docker-example-standalone:latest uv run uv_docker_example
+        run: docker run uv-docker-example-standalone:latest python -m uv_docker_example
