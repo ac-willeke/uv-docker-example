@@ -1,42 +1,34 @@
 # uv-docker-example
 
-An example project for using uv in Docker images, with a focus on best practices for developing with
-the project mounted in the local image.
+An example project for using uv in Docker images, with a focus on best practices for developing with the project mounted in the local image.
 
 See the [uv Docker integration guide](https://docs.astral.sh/uv/guides/integration/docker/) for more
 background.
 
 ## Trying it out
 
-A [`run.sh`](./run.sh) utility is provided for quickly building the image and starting a container.
-This script demonstrates best practices for developing using the container, using bind mounts for
-the project and virtual environment directories.
+A [`run.sh`](./run.sh) utility is provided for quickly building the image and starting a container. This script demonstrates best practices for developing using the container, using bind mounts for the project and virtual environment directories.
 
-To build and run the web application in the container using `docker run`:
+To build and run the python package in the container using `docker`:
 
 ```console
-$ ./run.sh
+docker build -q .
+docker run --rm -v "%CD%:/app" -v "/app/.venv" uv
 ```
 
-Then, check out [`http://localhost:8000`](http://localhost:8000) to see the website.
+This prints out: `Hello from uv-docker-example!
 
-A Docker compose configuration is also provided to demonstrate best practices for developing using
-the container with Docker compose. Docker compose is more complex than using `docker run`, but has
-more robust support for various workflows.
+or simply run the windows file: `run.bat` or the linux file `run.sh`
 
-To build and run the web application using Docker compose:
+
+A Docker compose configuration is also provided to demonstrate best practices for developing using the container with Docker compose. Docker compose is more complex than using `docker run`, but has more robust support for various workflows.
+
+To build and run the python package using Docker compose:
 
 ```
 docker compose up --watch 
-```
-
-By default, the image is set up to start the web application. However, a command-line interface is
-provided for demonstration purposes as well. 
-
-To run the command-line entrypoint in the container:
-
-```console
-$ ./run.sh hello
+> response
+app-1   | Hello from uv-docker-example!
 ```
 
 ## Project overview
@@ -50,41 +42,31 @@ The [`Dockerfile`](./Dockerfile) defines the image and includes:
 - Placing environment executables on the `PATH`
 - Running the web application
 
-The [`multistage.Dockerfile`](./multistage.Dockerfile) example extends the `Dockerfile` example to
-use multistage builds to reduce the final size of the image.
+The [`multistage.Dockerfile`](./multistage.Dockerfile) example extends the `Dockerfile` example to use multistage builds to reduce the final size of the image.
 
-The [`standalone.Dockerfile`](./standalone.Dockerfile) example extends the `multistage.Dockerfile`
-example to use a managed Python interpreter in a multistage build instead of the system interpreter
-that comes with the base image.
+The [`standalone.Dockerfile`](./standalone.Dockerfile) example extends the `multistage.Dockerfile` example to use a managed Python interpreter in a multistage build instead of the system interpreter that comes with the base image.
+
+Note that the `multistage.Dockerfile` and the `standalone.Dockerfile` are used by CI for building and testing images, but are not used for local development or devcontainers.
 
 ### Dockerignore file
 
-The [`.dockerignore`](./.dockerignore) file includes an entry for the `.venv` directory to ensure the
-`.venv` is not included in image builds. Note that the `.dockerignore` file is not applied to volume
-mounts during container runs.
+The [`.dockerignore`](./.dockerignore) file includes an entry for the `.venv` directory to ensure the `.venv` is not included in image builds. Note that the `.dockerignore` file is not applied to volume mounts during container runs.
 
 ### Run script
 
-The [`run.sh`](./run.sh) script includes an example of invoking `docker run` for local development,
-mounting the source code for the project into the container so that edits are reflected immediately.
+The [`run.sh`](./run.sh) and [`run.bat`](./run.bat) script includes an example of invoking `docker run` for local development, mounting the source code for the project into the container so that edits are reflected immediately.
 
 ### Docker compose file
 
-The [compose.yml](./compose.yml) file includes a Docker compose definition for the web application.
-It includes a [`watch`
-directive](https://docs.docker.com/compose/file-watch/#compose-watch-versus-bind-mounts) for Docker
-compose, which is a best-practice method for updating the container on local changes.
+The [compose.yml](./compose.yml) file includes a Docker compose definition for the web application. It includes a [`watch` directive](https://docs.docker.com/compose/file-watch/#compose-watch-versus-bind-mounts) for Docker compose, which is a best-practice method for updating the container on local changes.
 
 ### Application code
 
-The Python application code for the project is at
-[`src/uv_docker_example/__init__.py`](./src/uv_docker_example/__init__.py) — there's a command line
-entrypoint and a basic FastAPI application — both of which just display "hello world" output.
+The Python application code for the project is at [`src/uv_docker_example/__init__.py`](./src/uv_docker_example/__init__.py) — there's a basic function with "hello world" output.
 
 ### Project definition
 
-The project at [`pyproject.toml`](./pyproject.toml) includes Ruff as an example development
-dependency, includes FastAPI as a dependency, and defines a `hello` entrypoint for the application.
+The project at [`pyproject.toml`](./pyproject.toml) includes Ruff as an example development dependency, and defines a the package as entrypoint for the application.
 
 ## Useful commands
 
