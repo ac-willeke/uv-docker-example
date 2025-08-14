@@ -107,7 +107,7 @@ jobs:
           docker compose down
 
       - name: Test command line (multistage)
-        run: docker run uv-docker-example-multistage:latest uv run uv_docker_example
+        run: docker run uv-docker-example-multistage:latest python -m uv_docker_example
 
       - name: Test command line (standalone)
-        run: docker run uv-docker-example-standalone:latest uv run uv_docker_example
+        run: docker run uv-docker-example-standalone:latest python -m uv_docker_example
